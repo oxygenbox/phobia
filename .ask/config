@@ -23,7 +23,7 @@
             "codeUri": "lambda/custom",
             "functionName": "ask-custom-Phobias-default",
             "handler": "index.handler",
-            "revisionId": "2447ef27-9f82-4869-a764-9264be1e68af",
+            "revisionId": "c9f47e7d-5ec9-46be-a54a-9366bec65fa8",
             "runtime": "nodejs10.x"
           }
         ]

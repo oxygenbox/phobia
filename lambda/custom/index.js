@@ -34,11 +34,6 @@ const LaunchRequestHandler = {
         speakOutput += `Lets see how familar you are with phobias. `
         speakOutput += delay + delay;
         speakOutput += nextQuestion.call(this, sessionAttributes)
-        //speakOutput += score()
-        //speakOutput += ` ` + myUtils.score()
-
-      //  let test = tools.scrambledNumberArray(10);
-      //  speakOutput += ` ${test}`
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -73,7 +68,6 @@ const AnswerPhobiaIntentHandler = {
     },
     handle(handlerInput) {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        //const slotValue = resolvedValue(handlerInput.requestEnvelope, `fear`)
         const slotValue = tools.resolvedSlotValue(handlerInput.requestEnvelope, `fear`)
         let speakOutput = `Answer phobia intent. You sais ${slotValue}`;
         
@@ -102,7 +96,6 @@ const GuessLetterIntentIntentHandler = {
     },
     handle(handlerInput) {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        //let letterSlot = resolvedValue(handlerInput.requestEnvelope, 'letter')
         const slotValue = tools.resolvedSlotValue(handlerInput.requestEnvelope, `letter`)
         let speakOutput = `Guess letter intent ${slotValue}`;
         let index = lettersArray.indexOf(slotValue)
@@ -116,7 +109,7 @@ const GuessLetterIntentIntentHandler = {
             //speakOutput += `You chose ${choice} and the answer is ${sessionAttributes.activePhobia.value}`
 
             if(choice.toLowerCase() === sessionAttributes.activePhobia.value.toLowerCase()) {
-                speakOutput += ` thats correct ${sessionAttributes.activePhobia.word} is the fear of ${sessionAttributes.activePhobia.value}`
+                speakOutput = ` thats correct ${sessionAttributes.activePhobia.word} is the fear of ${sessionAttributes.activePhobia.value}`
             } else {
                 speakOutput += ` failed to match`
             }
@@ -312,7 +305,8 @@ function getPhobiaChoices(attributes){
             choiceArray.push(value) 
         }
     }
-    const scrambledArray = mixupArrayValues(choiceArray)
+    const scrambledArray = tools.mixupArrayItems(choiceArray)
+    //const scrambledArray = mixupArrayValues(choiceArray)
     attributes.activePhobia.choices = scrambledArray.slice();
     //return makeArraySpeakable(scrambledArray)
     return tools.makeArraySpeakable(scrambledArray);
@@ -332,8 +326,8 @@ function getCelebsChoices(attributes){
             } 
         }
     }
-
-    const scrambledArray = mixupArrayValues(choiceArray)
+ 
+    const scrambledArray = tools.mixupArrayItems(choiceArray)
     attributes.activePhobia.choices = scrambledArray.slice();
     //return makeArraySpeakable(scrambledArray)
     return tools.makeArraySpeakable(scrambledArray)
@@ -348,7 +342,7 @@ function getCelebsChoices(attributes){
     */
 }
 
-
+/*
  //-------------
  const mixupArrayValues = function(valueArray) {
     var sourceArray = [];
@@ -376,8 +370,8 @@ function getCelebsChoices(attributes){
 
     return mixedValues;
   }
-
-
+*/
+/*
   //----------------------
   const  makeArraySpeakable = function(srcArray) {
     const lastEntry = srcArray.pop();
@@ -399,7 +393,7 @@ function getCelebsChoices(attributes){
 
     return msg;
   }
-
+*/
   //
    //-----------------------
    /*
