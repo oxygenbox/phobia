@@ -4,6 +4,11 @@ const data = require(`./my_modules/data`);
 const interceptors = require(`./my_modules/interceptors`);
 const lettersArray = [`a.`, `b.`, `c.`, `d.`, `e.`, `f.`, `g.`]
 
+const score = require(`./my_modules/myUtils/score`)
+
+const myUtils = require(`./my_modules/myUtils`)
+const tools = require(`./my_modules/myTools`);
+
 
 /*
 TODO
@@ -23,12 +28,17 @@ const LaunchRequestHandler = {
     handle(handlerInput) {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         const delay = `<break time="0.5s"/>`
-        let speakOutput = `What are you scared of? `;
+        let speakOutput = `So, What are you afraid of? `;
         speakOutput += delay
         speakOutput += `People are scared of all sorts of things. `;
         speakOutput += `Lets see how familar you are with phobias. `
         speakOutput += delay + delay;
         speakOutput += nextQuestion.call(this, sessionAttributes)
+        //speakOutput += score()
+        //speakOutput += ` ` + myUtils.score()
+
+      //  let test = tools.scrambledNumberArray(10);
+      //  speakOutput += ` ${test}`
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -63,9 +73,11 @@ const AnswerPhobiaIntentHandler = {
     },
     handle(handlerInput) {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        const slotValue = resolvedValue(handlerInput.requestEnvelope, `fear`)
+        //const slotValue = resolvedValue(handlerInput.requestEnvelope, `fear`)
+        const slotValue = tools.resolvedSlotValue(handlerInput.requestEnvelope, `fear`)
         let speakOutput = `Answer phobia intent. You sais ${slotValue}`;
-
+        
+    
         if(slotValue){
             if (slotValue.toLowerCase() === sessionAttributes.activePhobia.value){
                 speakOutput += ` Thats is right ${sessionAttributes.activePhobia.word } `
@@ -90,9 +102,10 @@ const GuessLetterIntentIntentHandler = {
     },
     handle(handlerInput) {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        let letterSlot = resolvedValue(handlerInput.requestEnvelope, 'letter')
-        let speakOutput = `Guess letter intent ${letterSlot}`;
-        let index = lettersArray.indexOf(letterSlot)
+        //let letterSlot = resolvedValue(handlerInput.requestEnvelope, 'letter')
+        const slotValue = tools.resolvedSlotValue(handlerInput.requestEnvelope, `letter`)
+        let speakOutput = `Guess letter intent ${slotValue}`;
+        let index = lettersArray.indexOf(slotValue)
 
         if(index < 0 || index >= sessionAttributes.activePhobia.choices){
             speakOutput = `Sorry I did not get that! `
@@ -301,7 +314,8 @@ function getPhobiaChoices(attributes){
     }
     const scrambledArray = mixupArrayValues(choiceArray)
     attributes.activePhobia.choices = scrambledArray.slice();
-    return makeArraySpeakable(scrambledArray)
+    //return makeArraySpeakable(scrambledArray)
+    return tools.makeArraySpeakable(scrambledArray);
 }
 
 //-----------
@@ -321,7 +335,8 @@ function getCelebsChoices(attributes){
 
     const scrambledArray = mixupArrayValues(choiceArray)
     attributes.activePhobia.choices = scrambledArray.slice();
-    return makeArraySpeakable(scrambledArray)
+    //return makeArraySpeakable(scrambledArray)
+    return tools.makeArraySpeakable(scrambledArray)
 
     /*
      {
@@ -387,6 +402,7 @@ function getCelebsChoices(attributes){
 
   //
    //-----------------------
+   /*
   const scrambleNumberArray = function(num) {
     var sourceArray = [];
     var newArray = [];
@@ -404,6 +420,7 @@ function getCelebsChoices(attributes){
     }
     return newArray;
   }
+  */
 
 
     //-----------------------
@@ -459,7 +476,8 @@ function getCelebsChoices(attributes){
 
 
 
-      //-----------------------   
+      //----------------------- 
+      /*  
       function resolvedValue(requestEnvelope, slotName) {
         if (requestEnvelope &&
           requestEnvelope.request &&
@@ -483,24 +501,11 @@ function getCelebsChoices(attributes){
         return requestEnvelope.request.intent.slots[slotName].value
         //return undefined;
 
-
-        //---------------
-        function evaluteGuess(attributes, slotValue){
-            let reply = ``
-            if(attributes.activePhobia.value.toLowerCase() === slotValue.toLowerCase()){
-
-            } else {
-
-            }
-
-            return reply;
-        }
-        
       }
+      */
 
       //
       function poolMaintainance(attributes){
-          /*
         if(!attributes.pool){
             attributes.pool = {
                 phobias:[],
@@ -514,28 +519,11 @@ function getCelebsChoices(attributes){
             
             if(attributes.pool[topic].length < 1){
                 let tot = data[topic].length;
-                attributes.pool[topic]  = scrambleNumberArray(tot)
+                //attributes.pool[topic]  = scrambleNumberArray(tot)
+                attributes.pool[topic] = tools.scrambledNumberArray(tot);
             }
         }
-        */
+        
 
     }
-      /*
-      
-        //create properties if they dont exist
-       
-              
-                
-
-                
-                
-                   
-                    
-                } 
-              } 
-          }
-          
-      }
-      */
-      
-
+     
