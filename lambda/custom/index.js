@@ -8,6 +8,7 @@ const score = require(`./my_modules/myUtils/score`)
 
 const myUtils = require(`./my_modules/myUtils`)
 const tools = require(`./my_modules/myTools`);
+const question = require(`./my_modules/question`);
 
 
 /*
@@ -33,8 +34,8 @@ const LaunchRequestHandler = {
         speakOutput += `People are scared of all sorts of things. `;
         speakOutput += `Lets see how familar you are with phobias. `
         speakOutput += delay + delay;
-        speakOutput += nextQuestion.call(this, sessionAttributes)
-
+        //speakOutput += nextQuestion.call(this, sessionAttributes)
+        speakOutput += question.create(sessionAttributes)
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -51,7 +52,8 @@ const AskPhobiaIntentHandler = {
     handle(handlerInput) {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes()
         let speakOutput = `Ask Phobia Intent`;
-        speakOutput = nextQuestion.call(this, sessionAttributes);
+        speakOutput += question.create(sessionAttributes)
+        //speakOutput = nextQuestion.call(this, sessionAttributes);
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -115,8 +117,9 @@ const GuessLetterIntentIntentHandler = {
             }
 
             const delay = `<break time="q.5s"/>`
-           // speakOutput += nextQuestion.call(this, sessionAttributes)
-            speakOutput += celebQuestion.call(this, sessionAttributes)
+            // speakOutput += nextQuestion.call(this, sessionAttributes)
+            //speakOutput += celebQuestion.call(this, sessionAttributes)
+            speakOutput += question.create(sessionAttributes)
         }
 
         return handlerInput.responseBuilder
@@ -306,9 +309,7 @@ function getPhobiaChoices(attributes){
         }
     }
     const scrambledArray = tools.mixupArrayItems(choiceArray)
-    //const scrambledArray = mixupArrayValues(choiceArray)
     attributes.activePhobia.choices = scrambledArray.slice();
-    //return makeArraySpeakable(scrambledArray)
     return tools.makeArraySpeakable(scrambledArray);
 }
 
@@ -329,7 +330,6 @@ function getCelebsChoices(attributes){
  
     const scrambledArray = tools.mixupArrayItems(choiceArray)
     attributes.activePhobia.choices = scrambledArray.slice();
-    //return makeArraySpeakable(scrambledArray)
     return tools.makeArraySpeakable(scrambledArray)
 
     /*
@@ -342,82 +342,8 @@ function getCelebsChoices(attributes){
     */
 }
 
-/*
- //-------------
- const mixupArrayValues = function(valueArray) {
-    var sourceArray = [];
-    var newArray = [];
-    const num = valueArray.length
-    
-    //create an array with numberm zero tp num
-    for (var i = 0; i < num; i++) {
-      sourceArray.push(i);
-    }
-    //pull out random number  from source to build new array
-    while (sourceArray.length > 0) {
-     let index = Math.floor(Math.random() * sourceArray.length);
-     let value = sourceArray[index];
-     sourceArray.splice(index, 1);
-     newArray.push(value);
-    }
-
-    //use newArray to decide order of mixedValues
-    var mixedValues = [];
-    for(var n = 0; n < newArray.length; n++){
-      let pointer = newArray[n];
-      mixedValues.push(valueArray[pointer])
-    }
-
-    return mixedValues;
-  }
-*/
-/*
-  //----------------------
-  const  makeArraySpeakable = function(srcArray) {
-    const lastEntry = srcArray.pop();
-    let labels = [`a`, `b`, `c`, `d`, `e`, `f`];
-    let label
-    let intro = ` fear of `
-    let msg = ``
-    for(var i =0; i< srcArray.length; i++){
-        label = labels.shift();
-        msg += `${label}. `;
-        msg += srcArray[i];
-        msg += `, `
-    }
-   
-    label = labels.shift();
-    msg += `or ${label}. `;
-    msg +=  lastEntry
-
-
-    return msg;
-  }
-*/
-  //
-   //-----------------------
-   /*
-  const scrambleNumberArray = function(num) {
-    var sourceArray = [];
-    var newArray = [];
-    //create an array with numberm zero tp num
-    for (var i = 0; i < num; i++) {
-      sourceArray.push(i);
-    }
-    
-    //pull out random number  from source to build new array
-    while (sourceArray.length > 0) {
-     let index = Math.floor(Math.random() * sourceArray.length);
-     let value = sourceArray[index];
-     sourceArray.splice(index, 1);
-     newArray.push(value);
-    }
-    return newArray;
-  }
-  */
-
-
     //-----------------------
+    /*
     function nextQuestion(attributes){
 
        poolMaintainance.call(this, attributes);
@@ -436,7 +362,7 @@ function getCelebsChoices(attributes){
         msg += getPhobiaChoices.call(this, attributes);
         return msg;
     }
-
+    */
 
      //-----------------------
      function celebQuestion(attributes){
@@ -459,46 +385,6 @@ function getCelebsChoices(attributes){
          return msg;
      }
 
- 
-     //{
-     //   name: `Christina Ricci`,
-      //  fear: `Indoor Plants`,
-      //  phobia: `Botanophobia`,
-     //   details: `Ricci admitted that touching a dirty houseplant is like torture. `
-    //}//,
-
-
-
-
-      //----------------------- 
-      /*  
-      function resolvedValue(requestEnvelope, slotName) {
-        if (requestEnvelope &&
-          requestEnvelope.request &&
-          requestEnvelope.request.intent &&
-          requestEnvelope.request.intent.slots &&
-          requestEnvelope.request.intent.slots[slotName] &&
-          requestEnvelope.request.intent.slots[slotName].resolutions &&
-          requestEnvelope.request.intent.slots[slotName].resolutions.resolutionsPerAuthority &&
-          requestEnvelope.request.intent.slots[slotName].resolutions.resolutionsPerAuthority[0] &&
-          requestEnvelope.request.intent.slots[slotName].resolutions.resolutionsPerAuthority[0].values &&
-          requestEnvelope.request.intent.slots[slotName].resolutions.resolutionsPerAuthority[0]
-            .values[0] &&
-          requestEnvelope.request.intent.slots[slotName].resolutions.resolutionsPerAuthority[0].values[0]
-            .value &&
-          requestEnvelope.request.intent.slots[slotName].resolutions.resolutionsPerAuthority[0].values[0]
-            .value.name) {
-          return requestEnvelope.request.intent.slots[slotName].resolutions
-            .resolutionsPerAuthority[0].values[0].value.name;
-        }
-    
-        return requestEnvelope.request.intent.slots[slotName].value
-        //return undefined;
-
-      }
-      */
-
-      //
       function poolMaintainance(attributes){
         if(!attributes.pool){
             attributes.pool = {
