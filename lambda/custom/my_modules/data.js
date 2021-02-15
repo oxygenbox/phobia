@@ -691,7 +691,7 @@ const data = {
             details: `According to Depp, his fear of clowns stems from the fact that there always seems to be a darkness lurking just under their surface`
         },
         {
-            name: `Jhnny Cash`,
+            name: `Johnny Cash`,
             fear: `Snakes`,
             phobia: `Ophidiophobia`,
             details: ``

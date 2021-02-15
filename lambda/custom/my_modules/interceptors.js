@@ -12,7 +12,7 @@ const RequestPersistenceInterceptor = {
       let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
       
       if(Object.keys(sessionAttributes).length === 0) {
-        const tools = require(`./tools`)
+        const tools = require(`./OLDtools`)
         tools.resetDB(sessionAttributes)
         //resetDB.call(this,sessionAttributes);
         handlerInput.attributesManager.setSessionAttributes(sessionAttributes);

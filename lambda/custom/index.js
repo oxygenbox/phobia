@@ -3,12 +3,10 @@ const Alexa = require('ask-sdk');
 const data = require(`./my_modules/data`);
 const interceptors = require(`./my_modules/interceptors`);
 const lettersArray = [`a.`, `b.`, `c.`, `d.`, `e.`, `f.`, `g.`]
-
-const score = require(`./my_modules/myUtils/score`)
-
-const myUtils = require(`./my_modules/myUtils`)
+const score = require(`./my_modules/score`)
 const tools = require(`./my_modules/myTools`);
 const question = require(`./my_modules/question`);
+const lastArrayItem = require('./my_modules/myTools/lastArrayItem');
 
 
 /*
@@ -18,6 +16,11 @@ TODO
 - celeb question
 - score
 - export
+- first visit
+- guess word as opposed to letters
+- help
+- fallback 
+- reprompt
 
 */
 
@@ -28,13 +31,15 @@ const LaunchRequestHandler = {
     },
     handle(handlerInput) {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        
+        //score.reset(sessionAttributes)
+
         const delay = `<break time="0.5s"/>`
         let speakOutput = `So, What are you afraid of? `;
         speakOutput += delay
         speakOutput += `People are scared of all sorts of things. `;
-        speakOutput += `Lets see how familar you are with phobias. `
+        speakOutput += `Lets see how familiar you are with phobias. `
         speakOutput += delay + delay;
-        //speakOutput += nextQuestion.call(this, sessionAttributes)
         speakOutput += question.create(sessionAttributes)
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -53,7 +58,7 @@ const AskPhobiaIntentHandler = {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes()
         let speakOutput = `Ask Phobia Intent`;
         speakOutput += question.create(sessionAttributes)
-        //speakOutput = nextQuestion.call(this, sessionAttributes);
+        
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -73,14 +78,13 @@ const AnswerPhobiaIntentHandler = {
         const slotValue = tools.resolvedSlotValue(handlerInput.requestEnvelope, `fear`)
         let speakOutput = `Answer phobia intent. You sais ${slotValue}`;
         
-    
         if(slotValue){
             if (slotValue.toLowerCase() === sessionAttributes.activePhobia.value){
                 speakOutput += ` Thats is right ${sessionAttributes.activePhobia.word } `
                 speakOutput += `is the fear of ${slotValue}`
             } else {
                 speakOutput += `no that is wrong! `
-            }
+            } 
         }
 
         return handlerInput.responseBuilder
@@ -100,26 +104,32 @@ const GuessLetterIntentIntentHandler = {
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
         const slotValue = tools.resolvedSlotValue(handlerInput.requestEnvelope, `letter`)
         let speakOutput = `Guess letter intent ${slotValue}`;
-        let index = lettersArray.indexOf(slotValue)
 
+        
+        //const evaluatedAs =score.evaluate(sessionAttributes, slotValue)
+
+        
+
+        const index = lettersArray.indexOf(slotValue)
         if(index < 0 || index >= sessionAttributes.activePhobia.choices){
             speakOutput = `Sorry I did not get that! `
-            speak += ` let me asked that anain. `
+            speak += ` let me asked that again. `
         } else {
             const sessionAttributes = handlerInput.attributesManager.getSessionAttributes()
             const choice  = sessionAttributes.activePhobia.choices[index];
-            //speakOutput += `You chose ${choice} and the answer is ${sessionAttributes.activePhobia.value}`
+            
 
             if(choice.toLowerCase() === sessionAttributes.activePhobia.value.toLowerCase()) {
-                speakOutput = ` thats correct ${sessionAttributes.activePhobia.word} is the fear of ${sessionAttributes.activePhobia.value}`
+                speakOutput = ` thats correct ${sessionAttributes.activePhobia.word} is the fear of ${sessionAttributes.activePhobia.value}. `
             } else {
-                speakOutput += ` failed to match`
+                speakOutput += ` Sorry that  is incorrect. `
             }
 
-            const delay = `<break time="q.5s"/>`
-            // speakOutput += nextQuestion.call(this, sessionAttributes)
-            //speakOutput += celebQuestion.call(this, sessionAttributes)
+            
+
             speakOutput += question.create(sessionAttributes)
+
+           
         }
 
         return handlerInput.responseBuilder
@@ -344,24 +354,7 @@ function getCelebsChoices(attributes){
 
     //-----------------------
     /*
-    function nextQuestion(attributes){
-
-       poolMaintainance.call(this, attributes);
-
-        const index = attributes.pool.phobias.shift();
-
-        const tot = data.phobias.length;
-       // const index = Math.floor(Math.random() * tot)
-       let obj = data.phobias[index]
-       attributes.activePhobia = obj;
-        
-       let msg = `Your next fear is, ${`<break time="0.5s"/>`} ${obj.word}. `
-        msg += `<break time="1s"/>`
-        msg += `Is ${obj.word} the fear of `
-        msg += `<break time="1s"/>`
-        msg += getPhobiaChoices.call(this, attributes);
-        return msg;
-    }
+  
     */
 
      //-----------------------
